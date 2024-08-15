@@ -9,45 +9,19 @@ const createProductIntoDB = async (payload: TProuduct) => {
 // get all product
 const getAllProductIntoDB = async (req: any) => {
   // get product based on category
-  const { category, search, sort, priceMin, priceMax, brand, rating } =
-    req.query;
+  const { category } = req.query;
   console.log("category", category);
 
-  let query: any = {};
+  const query: any = {};
 
   if (category) {
     query.category = category;
   }
 
-  if (search) {
-    query.name = { $regex: search, $options: "i" };
-  }
-
-  if (priceMin !== undefined && priceMax !== undefined) {
-    query.price = { $gte: priceMin, $lte: priceMax };
-  }
-  // serace by brand
-  if (brand) {
-    query.brand = { $regex: brand, $options: "i" };
-  }
-
-  if (rating !== undefined) {
-    query.rating = { $lte: rating };
-  }
-
-  // sorting
-
-  console.log("query ", query);
-  console.log("query ", query.search);
   let result = await Product.find(query);
-  if (!result || result.length === 0) {
-    result = await Product.find();
-  }
 
-  if (sort === "priceAsc") {
-    result = result.sort((a, b) => a.price - b.price);
-  } else if (sort === "priceDesc") {
-    result = result.sort((a, b) => b.price - a.price);
+  if (!result || result.length === 0) {
+    result = await Product.find({});
   }
 
   return result;
