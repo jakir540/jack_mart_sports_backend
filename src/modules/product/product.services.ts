@@ -1,6 +1,7 @@
-import { query } from "express";
-import { TProuduct } from "./product.interface";
-import { Product } from "./product.model";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// import { query } from 'express';
+import { TProuduct } from './product.interface';
+import { Product } from './product.model';
 // create a product
 const createProductIntoDB = async (payload: TProuduct) => {
   const result = await Product.create(payload);
@@ -10,7 +11,7 @@ const createProductIntoDB = async (payload: TProuduct) => {
 const getAllProductIntoDB = async (req: any) => {
   // get product based on category
   const { category } = req.query;
-  console.log("category", category);
+  console.log('category', category);
 
   const query: any = {};
 
@@ -31,7 +32,7 @@ const getAllProductIntoDB = async (req: any) => {
 const deleteSingleProductIntoDB = async (id: string) => {
   const product = await Product.findById(id);
   if (!product) {
-    throw new Error("Product not find");
+    throw new Error('Product not find');
   }
   const deletedProduct = await Product.findByIdAndDelete(id);
   return deletedProduct;
@@ -40,18 +41,18 @@ const deleteSingleProductIntoDB = async (id: string) => {
 const getSingleProductIntoDB = async (id: string) => {
   const product = await Product.findById(id);
   if (!product) {
-    throw new Error("Product not find");
+    throw new Error('Product not find');
   }
   return product;
 };
 // update single product
 const updateSingleProductIntoDB = async (
   id: string,
-  payload: Partial<TProuduct>
+  payload: Partial<TProuduct>,
 ) => {
   const product = await Product.findById(id);
   if (!product) {
-    throw new Error("Product not find");
+    throw new Error('Product not find');
   }
 
   const updatedProduct = await Product.findByIdAndUpdate(id, payload, {
@@ -64,13 +65,13 @@ const updateSingleProductIntoDB = async (
 // update product stock qunatity
 const updateStockQuantityProductIntoDB = async (
   productIds: string[],
-  stockQuantity: number[]
+  stockQuantity: number[],
 ) => {
   // console.log("ids", productIds, stockQuantity);
 
   const updatePromises = productIds.map(async (id: string, index: number) => {
     const qunatityToUpdate = stockQuantity[index];
-    console.log("notoUpdate", qunatityToUpdate);
+    console.log('notoUpdate', qunatityToUpdate);
 
     const product = await Product.findById(id.toString());
     if (!product) {
@@ -82,13 +83,13 @@ const updateStockQuantityProductIntoDB = async (
       throw new Error(`Insufficient stock for product ID ${id}`);
     }
 
-    console.log("poran", product.stockQuantity);
-    console.log("noton", newQuantity);
+    console.log('poran', product.stockQuantity);
+    console.log('noton', newQuantity);
 
     const updateProduct = await Product.findByIdAndUpdate(
       id.toString(),
       { stockQuantity: newQuantity },
-      { new: true }
+      { new: true },
     );
     return updateProduct;
   });
